@@ -1,0 +1,15 @@
+---
+title: "Senior Project Proposal 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This project will be focused on machine learning algorithms to be able to predict the probability of a candidate who will work for the company (leaving their current job) and the probability that a candidate would be looking for a new job after courses and assessments have been taken. This helps save money, time and resources for the company. It allows them to discontinue training with those who will be interested in other jobs.
+
+The information on this project and data can also be found here: https://www.kaggle.com/arashnic/hr-analytics-job-change-of-data-scientists.
+
+This project will be concluded April 8th with a written report of my findings. I will use multiple different machine learning algorithms and compare their accuracy to conclude which model is best.
+

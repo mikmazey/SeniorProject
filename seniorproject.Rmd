@@ -1,0 +1,76 @@
+---
+title: "Senior Project"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#reading in data
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(class)
+
+bankdata <- read_csv("~/Documents/Senior Project/bankdataset.csv")
+
+#change existing customer to 1 and non existing customer to 0
+data <- bankdata %>% 
+  mutate(Response = case_when(Attrition_Flag == "Existing Customer" ~ 1,
+                              Attrition_Flag == "Attrited Customer" ~ 0)) 
+#getting rid of some columns
+clean_data <- data %>% 
+  select(-2, -22, -23)
+
+clean <- clean_data %>% 
+  mutate(Income_category2 = case_when(Income_Category == "$120K + " ~ 5,
+                                      Income_Category == "$80K - $120K" ~ 4,
+                                      Income_Category == "$60K - $80K" ~ 3,
+                                      Income_Category == "$40K - $60K" ~ 2,
+                                      Income_Category == "Less Than $40K" ~ 1)) %>% 
+  drop_na(Income_category2) %>% 
+  select("CLIENTNUM", "Customer_Age", "Gender", "Dependent_count", "Education_Level", "Marital_Status", "Income_Category", "Income_category2", "Card_Category", "Months_on_book", "Total_Relationship_Count", "Months_Inactive_12_mon", "Contacts_Count_12_mon", "Credit_Limit", "Total_Revolving_Bal", "Avg_Open_To_Buy", "Total_Amt_Chng_Q4_Q1", "Total_Trans_Amt", "Total_Trans_Ct", "Total_Ct_Chng_Q4_Q1", "Avg_Utilization_Ratio", "Response")
+
+
+
+```
+
+```{r}
+
+#splitting data into train and test. 
+dt = sort(sample(nrow(clean)*.7))
+
+train <- clean[dt,] 
+test<-clean[-dt,]
+
+
+# This part is for KNN
+#extract 22nd column (last column) because it will be used as 'cl' argument in knn function
+
+target_category <- clean[dt, 22]
+
+#extract last column for accuracy
+test_category <-clean[-dt, 22]
+
+```
+
+KNN algorithm
+```{r}
+library(class)
+#KNN function
+pr <- knn(train, test, cl=target_category, k=13)
+
+#create confusion matrix
+
+tab <- table(pr, test_category)
+
+#This function divides the correct predictions by total number of predictions that tell us how accurate the model is
+
+accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
+
+
+
+```
+
